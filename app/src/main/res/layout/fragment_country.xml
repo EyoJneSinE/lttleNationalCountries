@@ -24,7 +24,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_below="@+id/countryListImage"
-            android:text="Country Capital"
+            android:text="@string/country_capital"
             android:textSize="16sp"
             android:layout_centerHorizontal="true"
             android:layout_margin="7dp">
@@ -36,7 +36,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_below="@+id/countryListCapital"
-            android:text="Country Region"
+            android:text="@string/country_region"
             android:textSize="16sp"
             android:layout_centerHorizontal="true"
             android:layout_margin="7dp">
@@ -48,7 +48,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_below="@+id/countryListRegion"
-            android:text="Country Currency"
+            android:text="@string/country_currency"
             android:textSize="16sp"
             android:layout_centerHorizontal="true"
             android:layout_margin="7dp">
@@ -60,7 +60,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_below="@+id/countryListCurrency"
-            android:text="Country Language"
+            android:text="@string/country_language"
             android:textSize="16sp"
             android:layout_centerHorizontal="true"
             android:layout_margin="7dp">
