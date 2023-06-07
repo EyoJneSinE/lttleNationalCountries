@@ -32,6 +32,16 @@ class FeedFragment : BaseFragment<FragmentFeedBinding>() {
             countryList.adapter = countryAdapter
         }
 
+        binding.apply {
+            swipeRefreshLayout.setOnRefreshListener {
+                countryList.visibility = View.GONE
+                countryError.visibility = View.GONE
+                countryLoading.visibility = View.VISIBLE
+                viewModel.refreshData()
+                swipeRefreshLayout.isRefreshing = false
+            }
+        }
+
         observeLiveData()
 
     }
