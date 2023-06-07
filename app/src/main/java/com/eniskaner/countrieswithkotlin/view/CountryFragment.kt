@@ -1,33 +1,51 @@
 package com.eniskaner.countrieswithkotlin.view
 
 import android.os.Bundle
-import androidx.fragment.app.Fragment
-import android.view.LayoutInflater
 import android.view.View
-import android.view.ViewGroup
-import com.eniskaner.countrieswithkotlin.R
+import androidx.lifecycle.Observer
+import androidx.lifecycle.ViewModelProviders
+import com.eniskaner.countrieswithkotlin.base.BaseFragment
+import com.eniskaner.countrieswithkotlin.databinding.FragmentCountryBinding
+import com.eniskaner.countrieswithkotlin.viewmodel.CountryViewModel
+class CountryFragment : BaseFragment<FragmentCountryBinding>() {
 
-class CountryFragment : Fragment() {
+    override fun setBinding(): FragmentCountryBinding = FragmentCountryBinding.inflate(layoutInflater)
 
+    private lateinit var viewModel : CountryViewModel
     private var countryUuid = 0
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-    }
-
-    override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View? {
-        // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_country, container, false)
-    }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        viewModel = ViewModelProviders.of(this).get(CountryViewModel::class.java)
+        viewModel.getDataFromRoom()
+
+
         arguments?.let {
             countryUuid = CountryFragmentArgs.fromBundle(it).countryUuid
         }
+
+        observeLiveData()
+    }
+
+    private fun observeLiveData() {
+        viewModel.countryLiveData.observe(viewLifecycleOwner, Observer { country->
+            country?.let {
+
+                viewModel.countryLiveData.observe(viewLifecycleOwner, Observer { countries ->
+                    countries?.let {
+                        binding.apply {
+                            countryListName.text = country.countryName
+                            countryListCapital.text = country.countryCapital
+                            countryListCurrency.text = country.countryCurrency
+                            countryListLanguage.text = country.countryLanguage
+                            countryListRegion.text = country.countryRegion
+                        }
+                    }
+                })
+
+            }
+        })
     }
 
 

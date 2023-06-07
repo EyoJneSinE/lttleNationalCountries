@@ -5,22 +5,70 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.lifecycle.Observer
+import androidx.lifecycle.ViewModelProviders
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.eniskaner.countrieswithkotlin.R
+import com.eniskaner.countrieswithkotlin.adapter.CountryAdapter
+import com.eniskaner.countrieswithkotlin.base.BaseFragment
+import com.eniskaner.countrieswithkotlin.databinding.FragmentFeedBinding
+import com.eniskaner.countrieswithkotlin.viewmodel.FeedViewModel
 
-class FeedFragment : Fragment() {
+class FeedFragment : BaseFragment<FragmentFeedBinding>() {
 
+    override fun setBinding():FragmentFeedBinding = FragmentFeedBinding.inflate(layoutInflater)
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
+    private lateinit var viewModel : FeedViewModel
+    private val countryAdapter = CountryAdapter(arrayListOf())
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+
+        viewModel = ViewModelProviders.of(this).get(FeedViewModel::class.java)
+        viewModel.refreshData()
+
+        binding.apply {
+            countryList.layoutManager = LinearLayoutManager(context)
+            countryList.adapter = countryAdapter
+        }
+
+        observeLiveData()
 
     }
 
-    override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View? {
-        // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_feed, container, false)
+    private fun observeLiveData() {
+        viewModel.countries.observe(viewLifecycleOwner, Observer {countries ->
+            countries?.let {
+                binding.countryList.visibility = View.VISIBLE
+                countryAdapter.updateCountryList(countries)
+            }
+        })
+
+        viewModel.countryError.observe(viewLifecycleOwner, Observer { error ->
+            error?.let {
+                binding.apply {
+                    if (it) {
+                        countryError.visibility = View.VISIBLE
+                    } else {
+                        countryError.visibility = View.GONE
+                    }
+                }
+            }
+        })
+
+        viewModel.countryLoading.observe(viewLifecycleOwner, Observer { loading ->
+            loading?.let {
+                binding.apply {
+                    if (it) {
+                        countryLoading.visibility = View.VISIBLE
+                        countryList.visibility = View.GONE
+                        countryError.visibility = View.GONE
+                    } else {
+                        countryLoading.visibility = View.GONE
+                    }
+                }
+            }
+        })
     }
 
 }
