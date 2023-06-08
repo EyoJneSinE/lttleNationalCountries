@@ -1,5 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <data>
+        <variable
+            name="country"
+            type="com.eniskaner.countrieswithkotlin.model.Country" />
+    </data>
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="150dp"
@@ -26,7 +33,7 @@
                 android:id="@+id/countryName"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Name"
+                android:text="@{country.countryName}"
                 android:textSize="20sp"
                 android:textStyle="bold"
                 android:padding="5dp">
@@ -38,7 +45,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textSize="16sp"
-                android:text="Region"
+                android:text="@{country.countryRegion}"
                 android:padding="5dp">
 
             </TextView>
