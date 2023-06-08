@@ -6,6 +6,8 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import com.eniskaner.countrieswithkotlin.base.BaseFragment
 import com.eniskaner.countrieswithkotlin.databinding.FragmentCountryBinding
+import com.eniskaner.countrieswithkotlin.util.downloadFromUrl
+import com.eniskaner.countrieswithkotlin.util.placeholderProgressBar
 import com.eniskaner.countrieswithkotlin.viewmodel.CountryViewModel
 class CountryFragment : BaseFragment<FragmentCountryBinding>() {
 
@@ -17,36 +19,31 @@ class CountryFragment : BaseFragment<FragmentCountryBinding>() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        viewModel = ViewModelProviders.of(this).get(CountryViewModel::class.java)
-        viewModel.getDataFromRoom()
-
-
         arguments?.let {
             countryUuid = CountryFragmentArgs.fromBundle(it).countryUuid
         }
+
+        viewModel = ViewModelProviders.of(this).get(CountryViewModel::class.java)
+        viewModel.getDataFromRoom(countryUuid)
 
         observeLiveData()
     }
 
     private fun observeLiveData() {
-        viewModel.countryLiveData.observe(viewLifecycleOwner, Observer { country->
+        viewModel.countryLiveData.observe(viewLifecycleOwner, Observer { country ->
             country?.let {
+                binding.apply {
+                    countryListName.text = country.countryName
+                    countryListCapital.text = country.countryCapital
+                    countryListCurrency.text = country.countryCurrency
+                    countryListLanguage.text = country.countryLanguage
+                    countryListRegion.text = country.countryRegion
 
-                viewModel.countryLiveData.observe(viewLifecycleOwner, Observer { countries ->
-                    countries?.let {
-                        binding.apply {
-                            countryListName.text = country.countryName
-                            countryListCapital.text = country.countryCapital
-                            countryListCurrency.text = country.countryCurrency
-                            countryListLanguage.text = country.countryLanguage
-                            countryListRegion.text = country.countryRegion
-                        }
+                    context?.let {
+                        countryListImage.downloadFromUrl(country.imageUrl, placeholderProgressBar(it))
                     }
-                })
-
+                }
             }
         })
     }
-
-
 }
