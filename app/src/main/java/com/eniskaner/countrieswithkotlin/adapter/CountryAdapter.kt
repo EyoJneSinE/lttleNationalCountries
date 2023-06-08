@@ -23,7 +23,8 @@ class CountryAdapter(val countryList: ArrayList<Country>): RecyclerView.Adapter<
 
     override fun onBindViewHolder(holder: CountryViewHolder, position: Int) {
         holder.binding.apply {
-            countryName.text = countryList[position].countryName
+            country = countryList[position]
+            /*countryName.text = countryList[position].countryName
             countryRegion.text = countryList[position].countryRegion
 
             val imageUrl = countryList[position].imageUrl
@@ -34,6 +35,7 @@ class CountryAdapter(val countryList: ArrayList<Country>): RecyclerView.Adapter<
                 action.countryUuid = countryList[position].uuid
                 Navigation.findNavController(it).navigate(action)
             }
+            */
         }
     }
 
